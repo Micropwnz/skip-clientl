@@ -9,44 +9,146 @@
     :root {
       --primary: #4a90e2;
       --primary-hover: #357ab8;
-      --white: #ffffff;
-      --text-dark: #2c3e50;
-      --text-light: #7f8c8d;
-      --border: #dce3eb;
     }
 
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(-45deg, #4a90e2, #6dd5ed, #70e1f5, #d6eaff);
-      background-size: 400% 400%;
-      animation: gradientMove 15s ease infinite;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      overflow: hidden;
+      background: black;
+      color: white;
+      position: relative;
     }
 
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    /* 🌌 Galaxy Background */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('https://images.unsplash.com/photo-1601758003122-58e6a9d29aa0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center/cover;
+      z-index: -4;
+      opacity: 0.7;
+    }
+
+    /* Star field overlay */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(white 1px, transparent 1px), radial-gradient(white 1px, transparent 1px);
+      background-size: 4px 4px;
+      background-position: 0 0, 2px 2px;
+      animation: starMotion 40s linear infinite;
+      opacity: 0.07;
+      z-index: -3;
+      filter: brightness(0.85);
+    }
+
+    @keyframes starMotion {
+      from { transform: translate(0, 0); }
+      to { transform: translate(-1200px, -1200px); }
+    }
+
+    /* Twinkling tiny stars scattered */
+    .tiny-stars {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .tiny-star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: twinkle 3s infinite alternate ease-in-out;
+      filter: drop-shadow(0 0 2px #fff);
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.2; transform: scale(0.7); }
+      100% { opacity: 0.9; transform: scale(1.2); }
+    }
+
+    /* Floating cosmic shapes */
+    .floating-shape {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0.25;
+      filter: drop-shadow(0 0 8px rgba(74,144,226,0.8));
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+    }
+
+    .shape-ring {
+      border: 2px solid rgba(74, 144, 226, 0.5);
+      animation-name: floatUpDown, rotateSlow;
+      animation-duration: 10s, 40s;
+      animation-timing-function: ease-in-out, linear;
+      animation-iteration-count: infinite, infinite;
+      transform-origin: center center;
+    }
+
+    .shape-dot {
+      background: rgba(74, 144, 226, 0.6);
+      animation-name: floatLeftRight, pulseGlow;
+      animation-duration: 7s, 4s;
+      animation-timing-function: ease-in-out, ease-in-out;
+      animation-iteration-count: infinite, infinite;
+      filter: drop-shadow(0 0 10px #4a90e2);
+    }
+
+    @keyframes floatUpDown {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(20px); }
+    }
+
+    @keyframes floatLeftRight {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(20px); }
+    }
+
+    @keyframes rotateSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 10px #4a90e2); opacity: 0.7; }
+      50% { filter: drop-shadow(0 0 20px #7aaaff); opacity: 1; }
     }
 
     .login-box {
-      position: relative;
-      background: var(--white);
-      padding: 36px 32px 30px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(14px);
+      padding: 40px 36px 34px;
       border-radius: 16px;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
       width: 100%;
-      max-width: 400px;
-      animation: fadeIn 0.4s ease;
+      max-width: 380px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
+      position: relative;
+      animation: fadeIn 0.5s ease-out;
+      z-index: 10;
+      color: #eee;
     }
 
     @keyframes fadeIn {
@@ -55,129 +157,166 @@
     }
 
     .login-box h1 {
-      margin: 0 0 24px;
-      font-size: 24px;
-      color: var(--text-dark);
+      margin-bottom: 26px;
+      font-size: 26px;
+      color: #bbe1ff;
       text-align: center;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 10px rgba(74,144,226,0.8);
     }
 
     .input-group {
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
 
     .input-group label {
       display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: var(--text-light);
       font-size: 14px;
+      color: #b0cfff;
+      margin-bottom: 8px;
+      font-weight: 600;
     }
 
     .input-group input {
       width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 15px;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      padding: 14px;
+      border: 1.8px solid #2a3f5c;
+      border-radius: 10px;
+      background: #0f1a2b;
+      color: #ddeeff;
+      font-size: 16px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .input-group input::placeholder {
+      color: #6f8faf;
     }
 
     .input-group input:focus {
       border-color: var(--primary);
       outline: none;
-      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+      box-shadow: 0 0 10px 3px rgba(74, 144, 226, 0.5);
+      background: #14223d;
     }
 
-    .login-box button[type="submit"] {
+    button[type="submit"] {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       background: var(--primary);
       color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: 700;
       cursor: pointer;
-      transition: background 0.2s ease;
+      transition: background 0.3s ease;
+      box-shadow: 0 6px 15px rgba(74,144,226,0.7);
+      user-select: none;
     }
 
-    .login-box button[type="submit"]:hover {
+    button[type="submit"]:hover {
       background: var(--primary-hover);
+      box-shadow: 0 8px 20px rgba(53,122,184,0.9);
     }
 
     .dev-button {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      background: none;
+      top: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.07);
       border: none;
-      font-size: 10px;
-      color: #aaa;
+      font-size: 11px;
+      color: #aacfff;
       cursor: pointer;
-      padding: 4px 6px;
-      border-radius: 4px;
+      padding: 5px 8px;
+      border-radius: 5px;
       opacity: 0.6;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
+      user-select: none;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      box-shadow: 0 0 8px rgba(74, 144, 226, 0.6);
+      text-shadow: 0 0 3px #4a90e2;
     }
 
     .dev-button:hover {
       opacity: 1;
-      color: #555;
-      background: rgba(0, 0, 0, 0.05);
-    }
-
-    .dev-button::after {
-      content: "Dev";
-      font-size: 10px;
-      font-weight: 600;
+      color: #fff;
+      background: rgba(74, 144, 226, 0.3);
+      box-shadow: 0 0 14px rgba(74, 144, 226, 1);
     }
 
     .dev-output {
-      margin-top: 20px;
-      padding: 12px;
-      background: #fffbe6;
-      border: 1px solid #ffe58f;
-      border-radius: 8px;
-      color: #8c6d1f;
-      font-size: 13px;
-      font-weight: 500;
+      margin-top: 22px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #2a4b7a;
+      border-radius: 12px;
+      color: #ffd966;
+      font-size: 14px;
       white-space: pre-wrap;
+      max-height: 160px;
+      overflow-y: auto;
       display: none;
+      box-shadow: 0 0 12px rgba(255, 217, 102, 0.9);
+      user-select: text;
     }
 
     .footer {
-      margin-top: 22px;
+      margin-top: 26px;
       text-align: center;
       font-size: 13px;
-      color: var(--text-light);
+      color: #aacfffcc;
+      z-index: 10;
+      position: relative;
+      user-select: none;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 5px rgba(74, 144, 226, 0.7);
     }
 
     .credits {
-      margin-top: 25px;
-      font-size: 12px;
-      color: #ffffffaa;
+      margin-top: 34px;
+      font-size: 13px;
+      color: #7eaaffaa;
       text-align: center;
-      font-weight: 500;
+      font-weight: 600;
+      position: relative;
+      z-index: 10;
+      user-select: none;
+      letter-spacing: 0.06em;
+      font-style: italic;
+      text-shadow: 0 0 5px rgba(74, 144, 226, 0.6);
     }
   </style>
 </head>
 <body>
 
+  <!-- Twinkling tiny stars scattered -->
+  <div class="tiny-stars" aria-hidden="true"></div>
+
+  <!-- Random floating shapes -->
+  <div class="floating-shape shape-ring" style="width:60px; height:60px; top:15%; left:10%; animation-delay: 0s;"></div>
+  <div class="floating-shape shape-dot" style="width:12px; height:12px; top:35%; left:30%; animation-delay: 3s;"></div>
+  <div class="floating-shape shape-ring" style="width:40px; height:40px; top:50%; left:70%; animation-delay: 5s;"></div>
+  <div class="floating-shape shape-dot" style="width:14px; height:14px; top:70%; left:20%; animation-delay: 1s;"></div>
+  <div class="floating-shape shape-ring" style="width:50px; height:50px; top:80%; left:80%; animation-delay: 2s;"></div>
+
   <div class="login-box">
     <h1>Skip Client</h1>
 
-    <!-- 🔘 Small Dev Access Button -->
-    <button type="button" class="dev-button" id="showDevBtn" title="Developer Access"></button>
+    <button type="button" class="dev-button" id="showDevBtn" title="Developer Access">Dev</button>
 
     <form id="loginForm">
       <div class="input-group">
         <label for="username">Username</label>
-        <input type="text" id="username" placeholder="Enter username" required />
+        <input type="text" id="username" placeholder="Enter username" required autocomplete="off" />
       </div>
 
       <div class="input-group">
         <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Enter password" required />
+        <input type="password" id="password" placeholder="Enter password" required autocomplete="off" />
       </div>
 
       <button type="submit">Login</button>
@@ -185,12 +324,9 @@
 
     <div id="devOutput" class="dev-output" role="status" aria-live="polite"></div>
 
-    <div class="footer">
-      &copy; 2025 Skip Client
-    </div>
+    <div class="footer">&copy; 2025 Skip Client</div>
   </div>
 
-  <!-- 👇 Credits -->
   <div class="credits">
     Created by Hihiben Frix and Micropwnz
   </div>
@@ -198,6 +334,19 @@
   <script>
     const credentials = [];
     const DEV_CODE = 'jackson';
+
+    // Create and place random tiny stars
+    const tinyStarsContainer = document.querySelector('.tiny-stars');
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      star.classList.add('tiny-star');
+      star.style.width = star.style.height = (Math.random() * 2 + 1) + 'px';
+      star.style.top = (Math.random() * 100) + 'vh';
+      star.style.left = (Math.random() * 100) + 'vw';
+      star.style.animationDuration = (2 + Math.random() * 3) + 's';
+      star.style.animationDelay = (Math.random() * 3) + 's';
+      tinyStarsContainer.appendChild(star);
+    }
 
     document.getElementById('loginForm').addEventListener('submit', function(event) {
       event.preventDefault();
